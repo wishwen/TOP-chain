@@ -368,6 +368,10 @@ if (STORE_UNIT_BLOCK)
     add_definitions(-DSTORE_UNIT_BLOCK)
 endif()
 
+if (AUTO_TX)
+    add_definitions(-DAUTO_TX)
+endif()
+
 if (${CMAKE_SYSTEM_NAME} STREQUAL Linux OR ${CMAKE_SYSTEM_NAME} STREQUAL Darwin)
 #  find_package(PkgConfig REQUIRED)
 

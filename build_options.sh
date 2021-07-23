@@ -153,6 +153,10 @@ do
         CMAKE_EXTRA_OPTIONS+=" -DSTORE_UNIT_BLOCK=ON"
         echo "BUILD WITH store unit block tool"
     ;;    
+    auto_tx)
+        CMAKE_EXTRA_OPTIONS+=" -DAUTO_TX=ON"
+        echo "BUILD WITH AUTO_TX"
+    ;;
     *)
         CMAKE_EXTRA_OPTIONS=" -DXENABLE_TESTS=OFF -DXENABLE_CODE_COVERAGE=OFF"
     ;;

@@ -160,6 +160,12 @@ bool xtxpool_service_mgr::start(const xvip2_t & xip, const std::shared_ptr<vnetw
     if (service != nullptr) {
         service->set_params(xip, vnet_driver);
         service->start(xip);
+#ifdef AUTO_TX
+        if (is_forever_leader(xip, vnet_driver)) {
+            m_auto_tx_mock = new xauto_tx_mock(top::base::xcontext_t::instance(), m_iothread_timer->get_thread_id(), make_observer(m_para->get_txpool()), make_observer(m_para->get_vblockstore()));
+            m_auto_tx_mock->start(0, auto_tx_timer_interval_ms);
+        }
+#endif
         return true;
     }
     return false;

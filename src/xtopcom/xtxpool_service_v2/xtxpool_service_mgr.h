@@ -11,6 +11,9 @@
 #include "xtxpool_service_v2/xtxpool_service_face.h"
 #include "xtxpool_service_v2/xtxpool_svc_para.h"
 #include "xtxpool_v2/xtxpool_face.h"
+#ifdef AUTO_TX
+#include "xtxpool_service_v2/xauto_tx_mock.h"
+#endif
 
 #include <map>
 
@@ -57,6 +60,9 @@ private:
     uint32_t m_bus_listen_id;
     xtxpool_service_timer_t * m_timer{nullptr};
     xtxpool_service_dispatcher_imp_t * m_dispatcher{nullptr};
+#ifdef AUTO_TX
+    xauto_tx_mock * m_auto_tx_mock{nullptr};
+#endif
 };
 
 class xtxpool_service_timer_t

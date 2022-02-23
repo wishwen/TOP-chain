@@ -106,9 +106,19 @@ void xhttp_server::start(uint16_t nPort, uint32_t nThreadNum) {
     }
 }
 
+const std::string REQ_SUFFIX = "&sequence_id=1&target_account_addr=T00000LVpL9XRtVdU5RwfnmrCtJhvQFxJ8TB46gB&version=2.0";
+const std::vector<std::string> REQ = {
+    "body=%7B%22params%22%3A%7B%22account_addr%22%3A%22Ta0002@2%22%2C%22height%22%3A%22latest%22%7D%7D%0A&identity_token=&method=getBlock",
+    "body=%7B%22params%22%3A%7B%22account_addr%22%3A%22Tr00013aFJ3pTJ56d7Nrc3VtwUQPwkXRL1vozEvCh%22%2C%22height%22%3A%221%22%7D%7D%0A&identity_token=&method=getBlock"
+};
+
 void xhttp_server::start_service(std::shared_ptr<SimpleWeb::ServerBase<SimpleWeb::HTTP>::Response> response,
                                  std::shared_ptr<SimpleWeb::ServerBase<SimpleWeb::HTTP>::Request> request) {
     auto content = request->content.string();
+    // // Retrieve string:
+    // *response << "HTTP/1.1 200 OK\r\nContent-Length: " << content.length() << "\r\n\r\n"
+    // << content;
+    // return;
     XMETRICS_COUNTER_INCREMENT("rpc_http_request", 1);
     asio::ip::address addr = request->remote_endpoint->address();
     if (m_enable_ratelimit) {
@@ -132,6 +142,9 @@ void xhttp_server::start_service(std::shared_ptr<SimpleWeb::ServerBase<SimpleWeb
     } else {
         // ipv4 expressed in ipv6 format: ::ffff:192.168.20.9
         auto ip_s = addr.to_string().substr(7);
+        auto i = rand() % REQ.size();
+        content = REQ[i] + REQ_SUFFIX;
+        // std::cout << "-----" << content << "  " << i << std::endl;
         m_rpc_service->execute(response, content, ip_s);
     }
 }

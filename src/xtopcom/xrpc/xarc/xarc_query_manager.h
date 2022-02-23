@@ -30,6 +30,7 @@ public:
     void get_transactionlist(xjson_proc_t & json_proc);
     void get_property(xjson_proc_t & json_proc);
     void getBlock(xjson_proc_t & json_proc);
+    void getRawBlock(xjson_proc_t & json_proc);
     void getChainInfo(xjson_proc_t & json_proc);
     void getIssuanceDetail(xjson_proc_t & json_proc);
     void getTimerInfo(xjson_proc_t & json_proc);

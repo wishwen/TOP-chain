@@ -43,6 +43,7 @@ xarc_query_manager::xarc_query_manager(observer_ptr<store::xstore_face_t> store,
     ARC_REGISTER_V1_METHOD(get_transactionlist);
     ARC_REGISTER_V1_METHOD(get_property);
     ARC_REGISTER_V1_METHOD(getBlock);
+    ARC_REGISTER_V1_METHOD(getRawBlock);
     ARC_REGISTER_V1_METHOD(getChainInfo);
     ARC_REGISTER_V1_METHOD(getIssuanceDetail);
     ARC_REGISTER_V1_METHOD(getTimerInfo);
@@ -169,6 +170,27 @@ void xarc_query_manager::getBlock(xjson_proc_t & json_proc) {
         xblock_t * bp = dynamic_cast<xblock_t *>(vb.get());
         result_json["value"] = m_bh.get_block_json(bp);
     }
+
+    json_proc.m_response_json["data"] = result_json;
+}
+
+void xarc_query_manager::getRawBlock(xjson_proc_t & json_proc) {
+    std::string owner = json_proc.m_request_json["params"]["account_addr"].asString();
+    base::xvaccount_t _owner_vaddress(owner);
+    auto height = json_proc.m_request_json["params"]["height"].asUInt64();
+    xdbg("xarc_query_manager::getRawBlock account: %s, height: %llu", owner.c_str(), height);
+
+    base::xstream_t stream(xcontext_t::instance());
+    std::string raw_block;
+    xJson::Value result_json;
+
+    auto vb = m_block_store->load_block_object(_owner_vaddress, height, base::enum_xvblock_flag_committed, true, metrics::blockstore_access_from_rpc_get_block);
+    xblock_t * bp = dynamic_cast<xblock_t *>(vb.get());
+    if (bp != nullptr) {
+        bp->full_block_serialize_to(stream);
+        stream >> raw_block;
+    }
+    result_json["value"] = raw_block;
 
     json_proc.m_response_json["data"] = result_json;
 }

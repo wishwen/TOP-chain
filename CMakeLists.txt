@@ -98,7 +98,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL Clang OR ${CMAKE_CXX_COMPILER_ID} STREQUAL
     # common compiling options
     add_compile_options(
         -fno-strict-aliasing
-        -fthreadsafe-statics
+        # -fthreadsafe-statics
         -pthread
         -fstack-protector-strong
         -fno-short-enums
